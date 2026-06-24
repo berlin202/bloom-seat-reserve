@@ -156,7 +156,7 @@ function TableNode({
   const seatR = 9;
 
   return (
-    <g>
+    <g transform={table.rotation ? `rotate(${table.rotation} ${cx} ${cy})` : undefined}>
       {/* Table oval */}
       <ellipse
         cx={cx}

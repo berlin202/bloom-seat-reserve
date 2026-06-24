@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { SeatingMap } from "@/components/SeatingMap";
 import { ReservationDialog } from "@/components/ReservationDialog";
 import { ConfirmationToast } from "@/components/ConfirmationToast";
-import { TOTAL_SEATS } from "@/lib/tables";
+import { RESERVABLE_SEATS } from "@/lib/tables";
 import { useReservations } from "@/lib/useReservations";
 import type { TableDef } from "@/lib/tables";
 
@@ -60,7 +60,7 @@ function Index() {
           <div className="shrink-0 text-right">
             <p className="font-display text-3xl text-[color:var(--gold)]">
               {reservations.length}
-              <span className="text-[color:var(--cream)]/50"> / {TOTAL_SEATS}</span>
+              <span className="text-[color:var(--cream)]/50"> / {RESERVABLE_SEATS}</span>
             </p>
             <p className="text-xs uppercase tracking-wider text-[color:var(--cream)]/60">
               seats reserved

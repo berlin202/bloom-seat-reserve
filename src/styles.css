@@ -132,13 +132,34 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+/* Passion & Nerve Dinner — dark + gold theme */
+:root {
+  --bg: #0c0907;
+  --surface: #16100c;
+  --map-bg: #120c08;
+  --gold: #d4af37;
+  --cream: #f3e9d2;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+@theme inline {
+  --font-display: "Cormorant Garamond", Georgia, serif;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
   }
 
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+  html, body {
+    background-color: var(--bg);
+    color: var(--cream);
+    font-family: var(--font-body);
   }
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
 }

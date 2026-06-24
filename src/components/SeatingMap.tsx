@@ -27,13 +27,13 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             </linearGradient>
           </defs>
 
-          {/* Stage */}
+          {/* Stage — centered in the room */}
           <g>
             <rect
-              x="290"
-              y="15"
-              width="420"
-              height="90"
+              x="390"
+              y="300"
+              width="220"
+              height="140"
               rx="10"
               fill="url(#stageGrad)"
               stroke="#d4af37"
@@ -42,7 +42,7 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             />
             <text
               x="500"
-              y="68"
+              y="378"
               textAnchor="middle"
               fill="#d4af37"
               fontSize="26"
@@ -53,20 +53,20 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             </text>
           </g>
 
-          {/* Pool */}
+          {/* Pool — top right */}
           <g>
             <ellipse
-              cx="955"
-              cy="340"
-              rx="38"
-              ry="80"
+              cx="950"
+              cy="200"
+              rx="40"
+              ry="70"
               fill="url(#poolGrad)"
               stroke="#60a5fa"
               strokeOpacity="0.5"
             />
             <text
-              x="955"
-              y="345"
+              x="950"
+              y="205"
               textAnchor="middle"
               fill="#dbeafe"
               fontSize="13"
@@ -76,22 +76,22 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             </text>
           </g>
 
-          {/* Food Station */}
+          {/* Food Station — directly below the pool */}
           <g>
             <rect
-              x="870"
-              y="650"
-              width="110"
-              height="60"
+              x="900"
+              y="295"
+              width="100"
+              height="80"
               rx="6"
               fill="#1f1410"
               stroke="#d4af37"
               strokeOpacity="0.5"
             />
-            <text x="925" y="675" textAnchor="middle" fill="#d4af37" fontSize="13">
+            <text x="950" y="328" textAnchor="middle" fill="#d4af37" fontSize="16">
               🍽
             </text>
-            <text x="925" y="697" textAnchor="middle" fill="#e7d9b8" fontSize="11" letterSpacing="1">
+            <text x="950" y="355" textAnchor="middle" fill="#e7d9b8" fontSize="11" letterSpacing="1">
               FOOD STATION
             </text>
           </g>
@@ -156,7 +156,7 @@ function TableNode({
   const seatR = 9;
 
   return (
-    <g>
+    <g transform={table.rotation ? `rotate(${table.rotation} ${cx} ${cy})` : undefined}>
       {/* Table oval */}
       <ellipse
         cx={cx}

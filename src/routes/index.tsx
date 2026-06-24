@@ -141,7 +141,7 @@ function Legend() {
   ];
   return (
     <div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-[color:var(--gold)]/20 bg-black/30 px-4 py-3 text-xs">
-      <span className="uppercase tracking-wider text-[color:var(--gold)]">Legend</span>
+      <span className="uppercase tracking-wider text-[color:var(--gold)]">Guide</span>
       {items.map((it) => (
         <div key={it.label} className="flex items-center gap-2">
           <span

@@ -13,10 +13,26 @@ export const Route = createFileRoute("/admin")({
   component: Admin,
 });
 
-const ADMIN_PASSWORD = "admin123";
+type Credential = { email?: string; password: string };
+
+// Accepted admin credentials. Legacy quick password is kept so existing
+// links still work; the new email-based credential was provided by the
+// event organiser.
+const ADMIN_CREDENTIALS: Credential[] = [
+  { password: "admin123" },
+  { email: "wccdinneradmin@gmail.com", password: "wccdinneradmin2026@#" },
+];
+
+function checkCredentials(email: string, password: string) {
+  const e = email.trim().toLowerCase();
+  return ADMIN_CREDENTIALS.some(
+    (c) => c.password === password && (!c.email || c.email.toLowerCase() === e),
+  );
+}
 
 function Admin() {
   const [unlocked, setUnlocked] = useState(false);
+  const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
   const [err, setErr] = useState(false);
 
@@ -26,23 +42,40 @@ function Admin() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (pwd === ADMIN_PASSWORD) setUnlocked(true);
+            if (checkCredentials(email, pwd)) setUnlocked(true);
             else setErr(true);
           }}
           className="w-full max-w-sm rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--surface)] p-6 shadow-2xl"
         >
           <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">Admin</p>
-          <h1 className="mt-1 font-display text-2xl">Enter password</h1>
+          <h1 className="mt-1 font-display text-2xl">Sign in</h1>
+          <label className="mt-4 block text-xs uppercase tracking-wider text-[color:var(--cream)]/60">
+            Email <span className="normal-case text-[color:var(--cream)]/40">(optional)</span>
+          </label>
+          <input
+            type="email"
+            autoComplete="username"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErr(false);
+            }}
+            className="mt-1 w-full rounded-md border border-[color:var(--gold)]/30 bg-black/30 px-3 py-2 outline-none focus:border-[color:var(--gold)]"
+          />
+          <label className="mt-3 block text-xs uppercase tracking-wider text-[color:var(--cream)]/60">
+            Password
+          </label>
           <input
             type="password"
+            autoComplete="current-password"
             value={pwd}
             onChange={(e) => {
               setPwd(e.target.value);
               setErr(false);
             }}
-            className="mt-4 w-full rounded-md border border-[color:var(--gold)]/30 bg-black/30 px-3 py-2 outline-none focus:border-[color:var(--gold)]"
+            className="mt-1 w-full rounded-md border border-[color:var(--gold)]/30 bg-black/30 px-3 py-2 outline-none focus:border-[color:var(--gold)]"
           />
-          {err && <p className="mt-2 text-sm text-red-300">Incorrect password.</p>}
+          {err && <p className="mt-2 text-sm text-red-300">Incorrect credentials.</p>}
           <button
             type="submit"
             className="mt-4 w-full rounded-md bg-[color:var(--gold)] px-4 py-2 text-sm font-semibold text-black hover:brightness-110"

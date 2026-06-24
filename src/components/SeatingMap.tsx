@@ -30,23 +30,24 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
           {/* Stage */}
           <g>
             <rect
-              x="350"
-              y="20"
-              width="300"
-              height="55"
-              rx="8"
+              x="290"
+              y="15"
+              width="420"
+              height="90"
+              rx="10"
               fill="url(#stageGrad)"
               stroke="#d4af37"
               strokeOpacity="0.6"
+              strokeWidth={1.5}
             />
             <text
               x="500"
-              y="53"
+              y="68"
               textAnchor="middle"
               fill="#d4af37"
-              fontSize="20"
+              fontSize="26"
               fontFamily="var(--font-display)"
-              letterSpacing="4"
+              letterSpacing="8"
             >
               STAGE
             </text>
@@ -55,20 +56,20 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
           {/* Pool */}
           <g>
             <ellipse
-              cx="900"
-              cy="200"
-              rx="75"
-              ry="100"
+              cx="955"
+              cy="340"
+              rx="38"
+              ry="80"
               fill="url(#poolGrad)"
               stroke="#60a5fa"
               strokeOpacity="0.5"
             />
             <text
-              x="900"
-              y="205"
+              x="955"
+              y="345"
               textAnchor="middle"
               fill="#dbeafe"
-              fontSize="14"
+              fontSize="13"
               letterSpacing="2"
             >
               POOL
@@ -79,18 +80,18 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
           <g>
             <rect
               x="870"
-              y="630"
+              y="650"
               width="110"
-              height="70"
+              height="60"
               rx="6"
               fill="#1f1410"
               stroke="#d4af37"
               strokeOpacity="0.5"
             />
-            <text x="925" y="660" textAnchor="middle" fill="#d4af37" fontSize="13">
+            <text x="925" y="675" textAnchor="middle" fill="#d4af37" fontSize="13">
               🍽
             </text>
-            <text x="925" y="685" textAnchor="middle" fill="#e7d9b8" fontSize="11" letterSpacing="1">
+            <text x="925" y="697" textAnchor="middle" fill="#e7d9b8" fontSize="11" letterSpacing="1">
               FOOD STATION
             </text>
           </g>
@@ -99,16 +100,16 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
           <g>
             <rect
               x="450"
-              y="710"
+              y="715"
               width="100"
-              height="30"
+              height="28"
               rx="4"
               fill="none"
               stroke="#d4af37"
               strokeDasharray="6 4"
               strokeOpacity="0.7"
             />
-            <text x="500" y="730" textAnchor="middle" fill="#e7d9b8" fontSize="13" letterSpacing="2">
+            <text x="500" y="734" textAnchor="middle" fill="#e7d9b8" fontSize="12" letterSpacing="2">
               ENTRANCE
             </text>
           </g>
@@ -149,10 +150,10 @@ function TableNode({
   const tableStroke = table.restricted ? "#6b6258" : "#d4af37";
 
   // Seat ring radii
-  const seatOffset = 16;
+  const seatOffset = 13;
   const ringRx = rx + seatOffset;
   const ringRy = ry + seatOffset;
-  const seatR = 11;
+  const seatR = 9;
 
   return (
     <g>
@@ -172,7 +173,7 @@ function TableNode({
         y={cy + 4}
         textAnchor="middle"
         fill={table.restricted ? "#9a9080" : "#e7d9b8"}
-        fontSize={table.restricted ? 10 : 14}
+        fontSize={table.restricted ? 9 : 13}
         fontFamily="var(--font-display)"
         letterSpacing="1"
       >
@@ -222,7 +223,7 @@ function TableNode({
               x={sx}
               y={sy + 3}
               textAnchor="middle"
-              fontSize={9}
+              fontSize={8}
               fill="#0a0706"
               fontWeight={700}
               pointerEvents="none"

@@ -76,8 +76,8 @@ function AdminTable() {
   );
 
   function exportCsv() {
-    const headers = ["Name", "Email", "Table", "Seat", "Dietary"];
-    const rows = sorted.map((r) => [r.name, r.email, r.tableLabel, String(r.seatNumber), r.dietary]);
+    const headers = ["Name", "Email", "Table", "Seat"];
+    const rows = sorted.map((r) => [r.name, r.email, r.tableLabel, String(r.seatNumber)]);
     const csv = [headers, ...rows]
       .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
       .join("\n");
@@ -125,7 +125,6 @@ function AdminTable() {
                 <Th>Email</Th>
                 <Th>Table</Th>
                 <Th>Seat</Th>
-                <Th>Dietary</Th>
               </tr>
             </thead>
             <tbody>
@@ -134,7 +133,7 @@ function AdminTable() {
               ))}
               {!loading && sorted.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
+                  <td colSpan={4} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
                     No reservations yet.
                   </td>
                 </tr>
@@ -158,7 +157,6 @@ function Row({ r }: { r: Reservation }) {
       <td className="px-4 py-3 text-[color:var(--cream)]/80">{r.email}</td>
       <td className="px-4 py-3">{r.tableLabel}</td>
       <td className="px-4 py-3">{r.seatNumber}</td>
-      <td className="px-4 py-3 text-[color:var(--cream)]/80">{r.dietary}</td>
     </tr>
   );
 }

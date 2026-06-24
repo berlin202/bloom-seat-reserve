@@ -8,15 +8,12 @@ type Props = {
   table: TableDef;
   seatNumber: number;
   onClose: () => void;
-  onConfirmed: (info: { name: string; email: string; dietary: string }) => void;
+  onConfirmed: (info: { name: string; email: string }) => void;
 };
-
-const DIETARY_OPTIONS = ["None", "Vegetarian", "Vegan", "Gluten-free"] as const;
 
 export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfirmed }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [dietary, setDietary] = useState<string>("None");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -48,11 +45,10 @@ export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfir
           seatNumber,
           name: trimmedName,
           email: trimmedEmail,
-          dietary,
           createdAt: serverTimestamp(),
         });
       });
-      onConfirmed({ name: trimmedName, email: trimmedEmail, dietary });
+      onConfirmed({ name: trimmedName, email: trimmedEmail });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not reserve seat. Please try again.");
     } finally {
@@ -88,19 +84,6 @@ export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfir
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-md border border-[color:var(--gold)]/30 bg-black/30 px-3 py-2 text-[color:var(--cream)] outline-none focus:border-[color:var(--gold)]"
             />
-          </Field>
-          <Field label="Dietary preference (optional)">
-            <select
-              value={dietary}
-              onChange={(e) => setDietary(e.target.value)}
-              className="w-full rounded-md border border-[color:var(--gold)]/30 bg-black/30 px-3 py-2 text-[color:var(--cream)] outline-none focus:border-[color:var(--gold)]"
-            >
-              {DIETARY_OPTIONS.map((opt) => (
-                <option key={opt} value={opt} className="bg-[color:var(--surface)]">
-                  {opt}
-                </option>
-              ))}
-            </select>
           </Field>
           {error && (
             <p className="rounded-md border border-red-500/50 bg-red-950/40 px-3 py-2 text-sm text-red-200">

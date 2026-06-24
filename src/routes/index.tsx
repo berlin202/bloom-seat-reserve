@@ -109,19 +109,15 @@ function Index() {
           table={pending.table}
           seatNumber={pending.seatNumber}
           onClose={() => setPending(null)}
-          onConfirmed={() => {
+          onConfirmed={({ name }) => {
             setConfirmation({
-              name: "", // filled below
+              name,
               tableLabel: pending.table.label,
               seatNumber: pending.seatNumber,
             });
+            setPending(null);
           }}
         />
-      )}
-
-      {pending && confirmation && (
-        // close pending after confirmation renders
-        <CloseAfter onMount={() => setPending(null)} />
       )}
 
       {confirmation && (
@@ -134,15 +130,6 @@ function Index() {
       )}
     </div>
   );
-}
-
-function CloseAfter({ onMount }: { onMount: () => void }) {
-  // Fires once
-  useState(() => {
-    onMount();
-    return null;
-  });
-  return null;
 }
 
 function Legend() {

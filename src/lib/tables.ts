@@ -30,24 +30,24 @@ export const TABLES: TableDef[] = [
   { id: "D", label: "D", seats: 10, x: 7, y: 70, rx: VRX, ry: VRY },
 
   // ── South-west: tilted, long axis pointing NW, seats facing NE → stage
-  { id: "F", label: "F", seats: 10, x: 20, y: 72, rx: HRX, ry: HRY, rotation: -45 },
-  { id: "E", label: "E", seats: 10, x: 14, y: 85, rx: HRX, ry: HRY, rotation: -45 },
+  { id: "F", label: "F", seats: 10, x: 19, y: 68, rx: HRX, ry: HRY, rotation: -45 },
+  { id: "E", label: "E", seats: 10, x: 11, y: 82, rx: HRX, ry: HRY, rotation: -45 },
 
   // ── South of stage: horizontal long axis, seats facing north → stage
-  { id: "A", label: "A", seats: 10, x: 33, y: 75, rx: HRX, ry: HRY },
-  { id: "DOCTORS", label: "Doctors", seats: 10, x: 48, y: 77, rx: 5, ry: HRY, restricted: true },
-  { id: "Q", label: "Q", seats: 10, x: 63, y: 75, rx: HRX, ry: HRY },
+  { id: "A", label: "A", seats: 10, x: 34, y: 73, rx: HRX, ry: HRY },
+  { id: "DOCTORS", label: "Doctors", seats: 10, x: 48, y: 75, rx: 5, ry: HRY, restricted: true },
+  { id: "Q", label: "Q", seats: 10, x: 62, y: 73, rx: HRX, ry: HRY },
 
   // ── Far south row (behind A / Doctors / Q): horizontal, seats facing north
-  { id: "G", label: "G", seats: 10, x: 19, y: 91, rx: HRX, ry: HRY },
-  { id: "H", label: "H", seats: 10, x: 32, y: 93, rx: HRX, ry: HRY },
-  { id: "I", label: "I", seats: 10, x: 46, y: 94, rx: HRX, ry: HRY },
-  { id: "J", label: "J", seats: 10, x: 60, y: 93, rx: HRX, ry: HRY },
-  { id: "K", label: "K", seats: 10, x: 74, y: 91, rx: HRX, ry: HRY },
+  { id: "G", label: "G", seats: 10, x: 21, y: 88, rx: HRX, ry: HRY },
+  { id: "H", label: "H", seats: 10, x: 33, y: 90, rx: HRX, ry: HRY },
+  { id: "I", label: "I", seats: 10, x: 46, y: 91, rx: HRX, ry: HRY },
+  { id: "J", label: "J", seats: 10, x: 59, y: 90, rx: HRX, ry: HRY },
+  { id: "K", label: "K", seats: 10, x: 71, y: 88, rx: HRX, ry: HRY },
 
   // ── South-east: tilted, long axis pointing NE, seats facing NW → stage
-  { id: "P", label: "P", seats: 10, x: 78, y: 72, rx: HRX, ry: HRY, rotation: 45 },
-  { id: "L", label: "L", seats: 10, x: 86, y: 85, rx: HRX, ry: HRY, rotation: 45 },
+  { id: "P", label: "P", seats: 10, x: 81, y: 68, rx: HRX, ry: HRY, rotation: 45 },
+  { id: "L", label: "L", seats: 10, x: 89, y: 82, rx: HRX, ry: HRY, rotation: 45 },
 
   // ── East column (right of stage): vertical long axis, seats facing west → stage
   { id: "R", label: "R", seats: 10, x: 72, y: 12, rx: VRX, ry: VRY },

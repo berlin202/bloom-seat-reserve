@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
+import { doc, runTransaction, serverTimestamp, collection, getCountFromServer } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { TableDef } from "@/lib/tables";
 
@@ -35,6 +35,8 @@ export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfir
     setSubmitting(true);
     try {
       const ref = doc(db, "reservations", seatId);
+      const countSnap = await getCountFromServer(collection(db, "reservations"));
+      const nextNumber = (countSnap.data().count ?? 0) + 1;
       await runTransaction(db, async (tx) => {
         const snap = await tx.get(ref);
         if (snap.exists()) throw new Error("This seat was just reserved by someone else.");
@@ -45,6 +47,7 @@ export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfir
           seatNumber,
           name: trimmedName,
           email: trimmedEmail,
+          reservationNumber: nextNumber,
           createdAt: serverTimestamp(),
         });
       });

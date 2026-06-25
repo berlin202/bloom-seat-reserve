@@ -108,9 +108,29 @@ function AdminTable() {
     [reservations],
   );
 
+  function formatTime(ts?: { seconds: number; nanoseconds: number }) {
+    if (!ts) return "—";
+    const d = new Date(ts.seconds * 1000);
+    return d.toLocaleString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  }
+
   function exportCsv() {
-    const headers = ["Name", "Email", "Table", "Seat"];
-    const rows = sorted.map((r) => [r.name, r.email, r.tableLabel, String(r.seatNumber)]);
+    const headers = ["#", "Name", "Table", "Seat", "Reserved at", "Email"];
+    const rows = sorted.map((r) => [
+      r.reservationNumber ?? "",
+      r.name,
+      r.tableLabel,
+      String(r.seatNumber),
+      formatTime(r.createdAt),
+      r.email,
+    ]);
     const csv = [headers, ...rows]
       .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
       .join("\n");
@@ -154,19 +174,20 @@ function AdminTable() {
           <table className="w-full text-left text-sm">
             <thead className="bg-black/40 text-xs uppercase tracking-wider text-[color:var(--gold)]">
               <tr>
+                <Th>#</Th>
                 <Th>Name</Th>
-                <Th>Email</Th>
                 <Th>Table</Th>
                 <Th>Seat</Th>
+                <Th>Reserved at</Th>
               </tr>
             </thead>
             <tbody>
               {sorted.map((r) => (
-                <Row key={r.seatId} r={r} />
+                <Row key={r.seatId} r={r} formatTime={formatTime} />
               ))}
               {!loading && sorted.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
+                  <td colSpan={5} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
                     No reservations yet.
                   </td>
                 </tr>
@@ -183,13 +204,22 @@ function Th({ children }: { children: React.ReactNode }) {
   return <th className="px-4 py-3 font-medium">{children}</th>;
 }
 
-function Row({ r }: { r: Reservation }) {
+function Row({
+  r,
+  formatTime,
+}: {
+  r: Reservation;
+  formatTime: (ts?: { seconds: number; nanoseconds: number }) => string;
+}) {
   return (
     <tr className="border-t border-white/5">
+      <td className="px-4 py-3 font-mono text-[color:var(--gold)]">
+        {r.reservationNumber ?? "—"}
+      </td>
       <td className="px-4 py-3">{r.name}</td>
-      <td className="px-4 py-3 text-[color:var(--cream)]/80">{r.email}</td>
       <td className="px-4 py-3">{r.tableLabel}</td>
       <td className="px-4 py-3">{r.seatNumber}</td>
+      <td className="px-4 py-3 text-[color:var(--cream)]/80">{formatTime(r.createdAt)}</td>
     </tr>
   );
 }

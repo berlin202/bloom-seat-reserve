@@ -57,19 +57,36 @@ function Index() {
               if a seat turns red while you decide, simply pick another.
             </p>
           </div>
-          <div className="shrink-0 text-right">
-            <p className="font-display text-3xl text-[color:var(--gold)]">
-              {reservations.length}
-              <span className="text-[color:var(--cream)]/50"> / {RESERVABLE_SEATS}</span>
-            </p>
-            <p className="text-xs uppercase tracking-wider text-[color:var(--cream)]/60">
-              seats reserved
-            </p>
+          <div className="flex shrink-0 items-center gap-3">
+            <div className="text-right">
+              <p className="font-display text-3xl text-[color:var(--gold)]">
+                {reservations.length}
+                <span className="text-[color:var(--cream)]/50"> / {RESERVABLE_SEATS}</span>
+              </p>
+              <p className="text-xs uppercase tracking-wider text-[color:var(--cream)]/60">
+                seats reserved
+              </p>
+            </div>
             <Link
               to="/admin"
-              className="mt-2 inline-block text-xs text-[color:var(--cream)]/50 underline-offset-4 hover:text-[color:var(--gold)] hover:underline"
+              aria-label="Admin sign in"
+              title="Admin"
+              className="grid h-10 w-10 place-items-center rounded-full border border-[color:var(--gold)]/40 text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10"
             >
-              Admin
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-5 w-5"
+                aria-hidden="true"
+              >
+                <path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z" />
+                <path d="m9 12 2 2 4-4" />
+              </svg>
             </Link>
           </div>
         </header>

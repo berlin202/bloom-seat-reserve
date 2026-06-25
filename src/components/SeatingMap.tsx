@@ -27,37 +27,37 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             </linearGradient>
           </defs>
 
-          {/* Stage — centered in the room */}
+          {/* Stage — large rectangle at the top, halfway between top edge and centre */}
           <g>
             <rect
-              x="390"
-              y="300"
-              width="220"
-              height="140"
+              x="310"
+              y="40"
+              width="380"
+              height="160"
               rx="10"
               fill="url(#stageGrad)"
               stroke="#d4af37"
-              strokeOpacity="0.6"
-              strokeWidth={1.5}
+              strokeOpacity="0.7"
+              strokeWidth={2}
             />
             <text
               x="500"
-              y="378"
+              y="130"
               textAnchor="middle"
               fill="#d4af37"
-              fontSize="26"
+              fontSize="32"
               fontFamily="var(--font-display)"
-              letterSpacing="8"
+              letterSpacing="10"
             >
               STAGE
             </text>
           </g>
 
-          {/* Pool — top right */}
+          {/* Pool — top-right corner */}
           <g>
             <ellipse
-              cx="950"
-              cy="200"
+              cx="945"
+              cy="110"
               rx="40"
               ry="70"
               fill="url(#poolGrad)"
@@ -65,8 +65,8 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
               strokeOpacity="0.5"
             />
             <text
-              x="950"
-              y="205"
+              x="945"
+              y="115"
               textAnchor="middle"
               fill="#dbeafe"
               fontSize="13"
@@ -76,22 +76,22 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             </text>
           </g>
 
-          {/* Food Station — directly below the pool */}
+          {/* Food Station — directly under the pool */}
           <g>
             <rect
               x="900"
-              y="295"
-              width="100"
-              height="80"
+              y="210"
+              width="90"
+              height="75"
               rx="6"
               fill="#1f1410"
               stroke="#d4af37"
               strokeOpacity="0.5"
             />
-            <text x="950" y="328" textAnchor="middle" fill="#d4af37" fontSize="16">
+            <text x="945" y="242" textAnchor="middle" fill="#d4af37" fontSize="16">
               🍽
             </text>
-            <text x="950" y="355" textAnchor="middle" fill="#e7d9b8" fontSize="11" letterSpacing="1">
+            <text x="945" y="266" textAnchor="middle" fill="#e7d9b8" fontSize="10" letterSpacing="1">
               FOOD STATION
             </text>
           </g>

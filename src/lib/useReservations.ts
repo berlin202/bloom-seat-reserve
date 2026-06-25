@@ -9,7 +9,7 @@ export type Reservation = {
   seatNumber: number;
   name: string;
   email: string;
-  dietary?: string;
+  reservationNumber?: number;
   createdAt?: { seconds: number; nanoseconds: number };
 };
 

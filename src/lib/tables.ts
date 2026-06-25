@@ -1,7 +1,7 @@
 // Table layout for the Passion & Nerve Dinner venue.
 // Coordinates are percentages of the 1000×750 map viewBox.
-// Stage sits at the top of the room (rectangle) and every table surrounds
-// it on three sides. Pool + food station live in the top-right corner.
+// Stage is a large rectangle at the top of the room. Every table surrounds it
+// on three sides. Pool + food station live in the top-right corner.
 
 export type TableDef = {
   id: string;
@@ -15,57 +15,49 @@ export type TableDef = {
   restricted?: boolean;
 };
 
-// All tables are clearly OVAL (long-axis ≈ 2× short-axis).
-const HRX = 4.4; // horizontal long-axis
-const HRY = 2.2;
-const VRX = 2.2; // vertical long-axis
-const VRY = 4.4;
+// All tables are clearly OVAL — long axis ≈ 2.5× short axis.
+const HRX = 5.0; // horizontal long axis (% of width)
+const HRY = 1.8;
+const VRX = 1.8; // vertical long axis
+const VRY = 5.0;
+
+const H = { rx: HRX, ry: HRY }; // horizontal
+const V = { rx: VRX, ry: VRY }; // vertical (and used for tilted; rotation handles the angle)
 
 export const TABLES: TableDef[] = [
   // ── LEFT side ──────────────────────────────────────────────────────────
-  // Column closest to the stage: B (near stage) with S above it
-  { id: "S", label: "S", seats: 10, x: 28, y: 36 },
-  { id: "B", label: "B", seats: 10, x: 28, y: 52 },
-  // Middle column: C vertical directly above F (tilted)
-  { id: "C", label: "C", seats: 10, x: 17, y: 50 },
-  { id: "F", label: "F", seats: 10, x: 17, y: 68, rotation: -45 },
-  // Outer column: D vertical directly above E (tilted)
-  { id: "D", label: "D", seats: 10, x: 7, y: 64 },
-  { id: "E", label: "E", seats: 10, x: 7, y: 82, rotation: -45 },
+  // Closest to stage: S (above) and B (near stage) — both vertical
+  { id: "S", label: "S", seats: 10, x: 29, y: 14, ...V },
+  { id: "B", label: "B", seats: 10, x: 29, y: 34, ...V },
+  // Middle: C vertical directly above F (tilted toward NE)
+  { id: "C", label: "C", seats: 10, x: 16, y: 36, ...V },
+  { id: "F", label: "F", seats: 10, x: 16, y: 58, ...H, rotation: -45 },
+  // Outer: D vertical directly above E (tilted toward NE)
+  { id: "D", label: "D", seats: 10, x: 6, y: 54, ...V },
+  { id: "E", label: "E", seats: 10, x: 6, y: 76, ...H, rotation: -45 },
 
   // ── CENTER (south of stage) ───────────────────────────────────────────
-  // Doctors' table in the middle, A and Q flanking, all horizontal
-  { id: "A", label: "A", seats: 10, x: 38, y: 50 },
-  { id: "DOCTORS", label: "Doctors", seats: 10, x: 50, y: 50, restricted: true },
-  { id: "Q", label: "Q", seats: 10, x: 62, y: 50 },
+  // Doctors in the middle, A and Q flanking, all horizontal
+  { id: "A", label: "A", seats: 10, x: 38, y: 40, ...H },
+  { id: "DOCTORS", label: "Doctors", seats: 10, x: 50, y: 40, ...H, restricted: true },
+  { id: "Q", label: "Q", seats: 10, x: 62, y: 40, ...H },
   // Five horizontal tables behind them
-  { id: "G", label: "G", seats: 10, x: 26, y: 70 },
-  { id: "H", label: "H", seats: 10, x: 38, y: 70 },
-  { id: "I", label: "I", seats: 10, x: 50, y: 70 },
-  { id: "J", label: "J", seats: 10, x: 62, y: 70 },
-  { id: "K", label: "K", seats: 10, x: 74, y: 70 },
+  { id: "G", label: "G", seats: 10, x: 26, y: 88, ...H },
+  { id: "H", label: "H", seats: 10, x: 38, y: 88, ...H },
+  { id: "I", label: "I", seats: 10, x: 50, y: 88, ...H },
+  { id: "J", label: "J", seats: 10, x: 62, y: 88, ...H },
+  { id: "K", label: "K", seats: 10, x: 74, y: 88, ...H },
 
   // ── RIGHT side ────────────────────────────────────────────────────────
   // Inner column (closer to stage): N top, O mid, P tilted bottom
-  { id: "N", label: "N", seats: 10, x: 72, y: 36 },
-  { id: "O", label: "O", seats: 10, x: 72, y: 52 },
-  { id: "P", label: "P", seats: 10, x: 72, y: 68, rotation: 45 },
+  { id: "N", label: "N", seats: 10, x: 71, y: 14, ...V },
+  { id: "O", label: "O", seats: 10, x: 71, y: 34, ...V },
+  { id: "P", label: "P", seats: 10, x: 71, y: 58, ...H, rotation: 45 },
   // Outer column (in front of pool/food): R top, M mid, L tilted bottom
-  { id: "R", label: "R", seats: 10, x: 83, y: 50 },
-  { id: "M", label: "M", seats: 10, x: 83, y: 64 },
-  { id: "L", label: "L", seats: 10, x: 83, y: 82, rotation: 45 },
-].map((t) => {
-  // apply default ovality based on orientation
-  const isHorizontal =
-    t.rotation === undefined &&
-    ["A", "DOCTORS", "Q", "G", "H", "I", "J", "K"].includes(t.id);
-  const isTilted = t.rotation !== undefined;
-  return {
-    ...t,
-    rx: isTilted ? HRX : isHorizontal ? HRX : VRX,
-    ry: isTilted ? HRY : isHorizontal ? HRY : VRY,
-  } as TableDef;
-});
+  { id: "R", label: "R", seats: 10, x: 84, y: 36, ...V },
+  { id: "M", label: "M", seats: 10, x: 84, y: 56, ...V },
+  { id: "L", label: "L", seats: 10, x: 84, y: 76, ...H, rotation: 45 },
+];
 
 export const TOTAL_SEATS = TABLES.reduce((acc, t) => acc + t.seats, 0);
 export const RESERVABLE_SEATS = TABLES.filter((t) => !t.restricted).reduce(

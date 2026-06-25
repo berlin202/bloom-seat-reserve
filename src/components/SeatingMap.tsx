@@ -27,13 +27,13 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             </linearGradient>
           </defs>
 
-          {/* Stage — large rectangle at the top, halfway between top edge and centre */}
+          {/* Stage — large rectangle centered at the top of the room */}
           <g>
             <rect
-              x="310"
+              x="320"
               y="40"
-              width="380"
-              height="160"
+              width="360"
+              height="150"
               rx="10"
               fill="url(#stageGrad)"
               stroke="#d4af37"
@@ -42,7 +42,7 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             />
             <text
               x="500"
-              y="130"
+              y="125"
               textAnchor="middle"
               fill="#d4af37"
               fontSize="32"
@@ -53,48 +53,50 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             </text>
           </g>
 
-          {/* Pool — top-right corner */}
+          {/* Pool — vertical oval on the right side */}
           <g>
             <ellipse
-              cx="945"
-              cy="110"
-              rx="40"
-              ry="70"
+              cx="955"
+              cy="340"
+              rx="35"
+              ry="130"
               fill="url(#poolGrad)"
               stroke="#60a5fa"
               strokeOpacity="0.5"
             />
             <text
-              x="945"
-              y="115"
+              x="955"
+              y="345"
               textAnchor="middle"
               fill="#dbeafe"
-              fontSize="13"
-              letterSpacing="2"
+              fontSize="14"
+              letterSpacing="3"
+              transform="rotate(-90 955 340)"
             >
               POOL
             </text>
           </g>
 
-          {/* Food Station — directly under the pool */}
+          {/* Food Station — bottom right */}
           <g>
             <rect
-              x="900"
-              y="210"
-              width="90"
-              height="75"
+              x="870"
+              y="600"
+              width="120"
+              height="55"
               rx="6"
               fill="#1f1410"
               stroke="#d4af37"
               strokeOpacity="0.5"
             />
-            <text x="945" y="242" textAnchor="middle" fill="#d4af37" fontSize="16">
+            <text x="930" y="625" textAnchor="middle" fill="#d4af37" fontSize="18">
               🍽
             </text>
-            <text x="945" y="266" textAnchor="middle" fill="#e7d9b8" fontSize="10" letterSpacing="1">
+            <text x="930" y="645" textAnchor="middle" fill="#e7d9b8" fontSize="10" letterSpacing="1">
               FOOD STATION
             </text>
           </g>
+
 
           {/* Entrance */}
           <g>

@@ -24,39 +24,33 @@ const VRY = 5.0;
 const H = { rx: HRX, ry: HRY }; // horizontal
 const V = { rx: VRX, ry: VRY }; // vertical (and used for tilted; rotation handles the angle)
 
+// Layout mirrors the official Cvent floor plan (18 tables: A–Q + Doctors).
 export const TABLES: TableDef[] = [
-  // ── LEFT side ──────────────────────────────────────────────────────────
-  // Closest to stage: S (above) and B (near stage) — both vertical
-  { id: "S", label: "S", seats: 10, x: 29, y: 14, ...V },
-  { id: "B", label: "B", seats: 10, x: 29, y: 34, ...V },
-  // Middle: C vertical directly above F (tilted toward NE)
-  { id: "C", label: "C", seats: 10, x: 16, y: 36, ...V },
-  { id: "F", label: "F", seats: 10, x: 16, y: 58, ...H, rotation: -45 },
-  // Outer: D vertical directly above E (tilted toward NE)
-  { id: "D", label: "D", seats: 10, x: 6, y: 54, ...V },
-  { id: "E", label: "E", seats: 10, x: 6, y: 76, ...H, rotation: -45 },
+  // ── LEFT side (mirror of right) ───────────────────────────────────────
+  { id: "D", label: "D", seats: 10, x: 8, y: 42, ...V },
+  { id: "C", label: "C", seats: 10, x: 18, y: 36, ...V },
+  { id: "B", label: "B", seats: 10, x: 28, y: 42, ...V },
+  { id: "F", label: "F", seats: 10, x: 20, y: 62, ...H },
+  { id: "E", label: "E", seats: 10, x: 9, y: 68, ...H },
 
   // ── CENTER (south of stage) ───────────────────────────────────────────
-  // Doctors in the middle, A and Q flanking, all horizontal
-  { id: "A", label: "A", seats: 10, x: 38, y: 40, ...H },
-  { id: "DOCTORS", label: "Doctors", seats: 10, x: 50, y: 40, ...H, restricted: true },
-  { id: "Q", label: "Q", seats: 10, x: 62, y: 40, ...H },
-  // Five horizontal tables behind them
-  { id: "G", label: "G", seats: 10, x: 26, y: 88, ...H },
-  { id: "H", label: "H", seats: 10, x: 38, y: 88, ...H },
-  { id: "I", label: "I", seats: 10, x: 50, y: 88, ...H },
-  { id: "J", label: "J", seats: 10, x: 62, y: 88, ...H },
-  { id: "K", label: "K", seats: 10, x: 74, y: 88, ...H },
+  { id: "A", label: "A", seats: 10, x: 38, y: 54, ...H },
+  { id: "DOCTORS", label: "Doctors", seats: 10, x: 50, y: 54, ...H, restricted: true },
+  { id: "Q", label: "Q", seats: 10, x: 62, y: 54, ...H },
 
-  // ── RIGHT side ────────────────────────────────────────────────────────
-  // Inner column (closer to stage): N top, O mid, P tilted bottom
-  { id: "N", label: "N", seats: 10, x: 71, y: 14, ...V },
-  { id: "O", label: "O", seats: 10, x: 71, y: 34, ...V },
-  { id: "P", label: "P", seats: 10, x: 71, y: 58, ...H, rotation: 45 },
-  // Outer column (in front of pool/food): R top, M mid, L tilted bottom
-  { id: "R", label: "R", seats: 10, x: 84, y: 36, ...V },
-  { id: "M", label: "M", seats: 10, x: 84, y: 56, ...V },
-  { id: "L", label: "L", seats: 10, x: 84, y: 76, ...H, rotation: 45 },
+  // ── BACK ROW (five horizontals along the south wall) ──────────────────
+  { id: "G", label: "G", seats: 10, x: 26, y: 82, ...H },
+  { id: "H", label: "H", seats: 10, x: 38, y: 82, ...H },
+  { id: "I", label: "I", seats: 10, x: 50, y: 82, ...H },
+  { id: "J", label: "J", seats: 10, x: 62, y: 82, ...H },
+  { id: "K", label: "K", seats: 10, x: 74, y: 82, ...H },
+
+  // ── RIGHT side (mirror of left) ───────────────────────────────────────
+  { id: "O", label: "O", seats: 10, x: 72, y: 42, ...V },
+  { id: "N", label: "N", seats: 10, x: 82, y: 36, ...V },
+  { id: "M", label: "M", seats: 10, x: 88, y: 46, ...V },
+  { id: "P", label: "P", seats: 10, x: 76, y: 62, ...H },
+  { id: "L", label: "L", seats: 10, x: 86, y: 68, ...H },
 ];
 
 export const TOTAL_SEATS = TABLES.reduce((acc, t) => acc + t.seats, 0);

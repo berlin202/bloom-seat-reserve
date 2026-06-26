@@ -1,0 +1,22 @@
+{
+  // Cloudflare Worker config for this TanStack Start app.
+  // This template builds with nitro (via @lovable.dev/vite-tanstack-config),
+  // which uses the Cloudflare preset and emits:
+  //   .output/server/index.mjs   <- Worker entry (SSR + server functions)
+  //   .output/public/            <- Static client assets (hashed JS/CSS, public/*)
+  // We DO NOT use @cloudflare/vite-plugin — it would conflict with nitro's
+  // Cloudflare build. Keep nitro as the producer; Wrangler just serves what
+  // nitro emits.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "passion-nerve-dinner",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2025-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".output/public",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

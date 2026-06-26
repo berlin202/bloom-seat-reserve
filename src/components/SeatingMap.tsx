@@ -1,12 +1,15 @@
 import { TABLES, type TableDef, seatId } from "@/lib/tables";
+import type { Reservation } from "@/lib/useReservations";
 
 type Props = {
   reservedSeatIds: Set<string>;
+  reservationsBySeat?: Map<string, Reservation>;
   selectedSeatId: string | null;
   onSelectSeat: (seatId: string, table: TableDef, seatNumber: number) => void;
+  onShowReserved?: (reservation: Reservation) => void;
 };
 
-export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Props) {
+export function SeatingMap({ reservedSeatIds, reservationsBySeat, selectedSeatId, onSelectSeat, onShowReserved }: Props) {
   return (
     <div className="relative w-full overflow-hidden rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--map-bg)] shadow-[0_0_60px_-20px_rgba(212,175,55,0.25)]">
       {/* aspect ratio box to keep map proportional */}
@@ -27,13 +30,13 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             </linearGradient>
           </defs>
 
-          {/* Stage — large rectangle centered at the top of the room */}
+          {/* Stage — moved up to free room for S/R above B/N */}
           <g>
             <rect
               x="320"
-              y="40"
+              y="15"
               width="360"
-              height="150"
+              height="130"
               rx="10"
               fill="url(#stageGrad)"
               stroke="#d4af37"
@@ -42,7 +45,7 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
             />
             <text
               x="500"
-              y="125"
+              y="90"
               textAnchor="middle"
               fill="#d4af37"
               fontSize="32"
@@ -122,8 +125,10 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
               key={table.id}
               table={table}
               reservedSeatIds={reservedSeatIds}
+              reservationsBySeat={reservationsBySeat}
               selectedSeatId={selectedSeatId}
               onSelectSeat={onSelectSeat}
+              onShowReserved={onShowReserved}
             />
           ))}
         </svg>
@@ -135,13 +140,17 @@ export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Pr
 function TableNode({
   table,
   reservedSeatIds,
+  reservationsBySeat,
   selectedSeatId,
   onSelectSeat,
+  onShowReserved,
 }: {
   table: TableDef;
   reservedSeatIds: Set<string>;
+  reservationsBySeat?: Map<string, Reservation>;
   selectedSeatId: string | null;
   onSelectSeat: (seatId: string, table: TableDef, seatNumber: number) => void;
+  onShowReserved?: (reservation: Reservation) => void;
 }) {
   const cx = (table.x / 100) * 1000;
   const cy = (table.y / 100) * 750;
@@ -151,7 +160,6 @@ function TableNode({
   const tableFill = table.restricted ? "#3a3530" : "#2a201a";
   const tableStroke = table.restricted ? "#6b6258" : "#d4af37";
 
-  // Seat ring radii
   const seatOffset = 13;
   const ringRx = rx + seatOffset;
   const ringRy = ry + seatOffset;
@@ -159,7 +167,6 @@ function TableNode({
 
   return (
     <g transform={table.rotation ? `rotate(${table.rotation} ${cx} ${cy})` : undefined}>
-      {/* Table oval */}
       <ellipse
         cx={cx}
         cy={cy}
@@ -182,7 +189,6 @@ function TableNode({
         {table.label}
       </text>
 
-      {/* Seats around the table */}
       {Array.from({ length: table.seats }, (_, i) => {
         const angle = (i / table.seats) * Math.PI * 2 - Math.PI / 2;
         const sx = cx + Math.cos(angle) * ringRx;
@@ -191,13 +197,15 @@ function TableNode({
         const reserved = reservedSeatIds.has(id);
         const selected = selectedSeatId === id;
         const restricted = !!table.restricted;
+        const reservation = reserved ? reservationsBySeat?.get(id) : undefined;
 
-        let fill = "#22c55e"; // available green
+        let fill = "#22c55e";
         if (restricted) fill = "#6b6258";
         else if (reserved) fill = "#dc2626";
         if (selected) fill = "#eab308";
 
         const clickable = !reserved && !restricted;
+        const showInfo = reserved && reservation && onShowReserved;
 
         return (
           <g key={id}>
@@ -208,17 +216,26 @@ function TableNode({
               fill={fill}
               stroke="#0a0706"
               strokeWidth={1.5}
-              className={clickable ? "cursor-pointer transition-opacity hover:opacity-80" : "cursor-not-allowed"}
+              className={
+                clickable
+                  ? "cursor-pointer transition-opacity hover:opacity-80"
+                  : showInfo
+                    ? "cursor-help transition-opacity hover:opacity-80"
+                    : "cursor-not-allowed"
+              }
               onClick={() => {
                 if (clickable) onSelectSeat(id, table, i + 1);
+                else if (showInfo && reservation) onShowReserved!(reservation);
               }}
             >
               <title>
                 {restricted
                   ? `${table.label} · Seat ${i + 1} — Restricted`
-                  : reserved
-                    ? `Table ${table.label} · Seat ${i + 1} — Reserved`
-                    : `Table ${table.label} · Seat ${i + 1} — Available`}
+                  : reservation
+                    ? `Table ${table.label} · Seat ${i + 1} — Reserved by ${reservation.name}${reservation.reservationNumber ? ` (#${reservation.reservationNumber})` : ""}. Click for details.`
+                    : reserved
+                      ? `Table ${table.label} · Seat ${i + 1} — Reserved`
+                      : `Table ${table.label} · Seat ${i + 1} — Available`}
               </title>
             </circle>
             <text

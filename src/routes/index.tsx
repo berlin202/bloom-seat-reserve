@@ -154,9 +154,13 @@ function Index() {
           onClose={() => setConfirmation(null)}
         />
       )}
+      <p className="pointer-events-none fixed bottom-2 right-3 text-[10px] tracking-wider text-[color:var(--cream)]/30">
+        developed by 202
+      </p>
     </div>
   );
 }
+
 
 function Legend() {
   const items: { color: string; label: string }[] = [

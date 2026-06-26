@@ -8,12 +8,12 @@ type Props = {
   table: TableDef;
   seatNumber: number;
   onClose: () => void;
-  onConfirmed: (info: { name: string; email: string }) => void;
+  onConfirmed: (info: { name: string; mobile: string }) => void;
 };
 
 export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfirmed }: Props) {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -22,13 +22,14 @@ export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfir
     setError(null);
 
     const trimmedName = name.trim();
-    const trimmedEmail = email.trim();
+    const trimmedMobile = mobile.trim();
     if (!trimmedName || trimmedName.length > 100) {
       setError("Please enter a valid name.");
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail) || trimmedEmail.length > 200) {
-      setError("Please enter a valid email address.");
+    const digits = trimmedMobile.replace(/[^\d]/g, "");
+    if (digits.length < 7 || digits.length > 20) {
+      setError("Please enter a valid mobile number.");
       return;
     }
 
@@ -46,12 +47,12 @@ export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfir
           tableLabel: table.label,
           seatNumber,
           name: trimmedName,
-          email: trimmedEmail,
+          mobile: trimmedMobile,
           reservationNumber: nextNumber,
           createdAt: serverTimestamp(),
         });
       });
-      onConfirmed({ name: trimmedName, email: trimmedEmail });
+      onConfirmed({ name: trimmedName, mobile: trimmedMobile });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not reserve seat. Please try again.");
     } finally {
@@ -78,13 +79,15 @@ export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfir
               className="w-full rounded-md border border-[color:var(--gold)]/30 bg-black/30 px-3 py-2 text-[color:var(--cream)] outline-none focus:border-[color:var(--gold)]"
             />
           </Field>
-          <Field label="Email">
+          <Field label="Mobile number">
             <input
-              type="email"
+              type="tel"
               required
-              maxLength={200}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              inputMode="tel"
+              maxLength={30}
+              placeholder="+1 555 123 4567"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
               className="w-full rounded-md border border-[color:var(--gold)]/30 bg-black/30 px-3 py-2 text-[color:var(--cream)] outline-none focus:border-[color:var(--gold)]"
             />
           </Field>

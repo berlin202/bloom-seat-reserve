@@ -122,15 +122,16 @@ function AdminTable() {
   }
 
   function exportCsv() {
-    const headers = ["#", "Name", "Table", "Seat", "Reserved at", "Email"];
+    const headers = ["#", "Name", "Table", "Seat", "Reserved at", "Mobile"];
     const rows = sorted.map((r) => [
       r.reservationNumber ?? "",
       r.name,
       r.tableLabel,
       String(r.seatNumber),
       formatTime(r.createdAt),
-      r.email,
+      r.mobile ?? r.email ?? "",
     ]);
+
     const csv = [headers, ...rows]
       .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
       .join("\n");

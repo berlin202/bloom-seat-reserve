@@ -37,9 +37,10 @@ export const TABLES: TableDef[] = [
   { id: "E", label: "E", seats: 10, x: 9, y: 68, ...H },
 
   // ── CENTER (south of stage) ──────────────────────────────────────────
-  { id: "A", label: "A", seats: 10, x: 38, y: 54, ...H },
-  { id: "DOCTORS", label: "Doctors", seats: 10, x: 50, y: 54, ...H, restricted: true },
-  { id: "Q", label: "Q", seats: 10, x: 62, y: 54, ...H },
+  { id: "A", label: "A", seats: 10, x: 38, y: 62, ...H },
+  { id: "DOCTORS", label: "Doctors", seats: 10, x: 50, y: 62, ...H, restricted: true },
+  { id: "Q", label: "Q", seats: 10, x: 62, y: 62, ...H },
+
 
   // ── BACK ROW (five horizontals; tighter rx to prevent seat overlap) ──
   { id: "G", label: "G", seats: 10, x: 26, y: 84, rx: HRX_BACK, ry: HRY },

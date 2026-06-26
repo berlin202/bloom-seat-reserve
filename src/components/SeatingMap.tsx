@@ -30,14 +30,14 @@ export function SeatingMap({ reservedSeatIds, reservationsBySeat, selectedSeatId
             </linearGradient>
           </defs>
 
-          {/* Stage — moved up to free room for S/R above B/N */}
+          {/* Stage — directly in front of (north of) the Doctors table */}
           <g>
             <rect
-              x="320"
-              y="15"
-              width="360"
-              height="130"
-              rx="10"
+              x="390"
+              y="230"
+              width="220"
+              height="95"
+              rx="8"
               fill="url(#stageGrad)"
               stroke="#d4af37"
               strokeOpacity="0.7"
@@ -45,16 +45,17 @@ export function SeatingMap({ reservedSeatIds, reservationsBySeat, selectedSeatId
             />
             <text
               x="500"
-              y="90"
+              y="285"
               textAnchor="middle"
               fill="#d4af37"
-              fontSize="32"
+              fontSize="26"
               fontFamily="var(--font-display)"
-              letterSpacing="10"
+              letterSpacing="8"
             >
               STAGE
             </text>
           </g>
+
 
           {/* Pool — vertical oval on the right side */}
           <g>

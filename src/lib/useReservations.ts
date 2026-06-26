@@ -8,7 +8,9 @@ export type Reservation = {
   tableLabel: string;
   seatNumber: number;
   name: string;
-  email: string;
+  email?: string;
+  mobile?: string;
+
   reservationNumber?: number;
   createdAt?: { seconds: number; nanoseconds: number };
 };

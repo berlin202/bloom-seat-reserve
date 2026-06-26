@@ -1,12 +1,15 @@
 import { TABLES, type TableDef, seatId } from "@/lib/tables";
+import type { Reservation } from "@/lib/useReservations";
 
 type Props = {
   reservedSeatIds: Set<string>;
+  reservationsBySeat?: Map<string, Reservation>;
   selectedSeatId: string | null;
   onSelectSeat: (seatId: string, table: TableDef, seatNumber: number) => void;
+  onShowReserved?: (reservation: Reservation) => void;
 };
 
-export function SeatingMap({ reservedSeatIds, selectedSeatId, onSelectSeat }: Props) {
+export function SeatingMap({ reservedSeatIds, reservationsBySeat, selectedSeatId, onSelectSeat, onShowReserved }: Props) {
   return (
     <div className="relative w-full overflow-hidden rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--map-bg)] shadow-[0_0_60px_-20px_rgba(212,175,55,0.25)]">
       {/* aspect ratio box to keep map proportional */}

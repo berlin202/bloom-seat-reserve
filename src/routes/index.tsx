@@ -4,7 +4,7 @@ import { SeatingMap } from "@/components/SeatingMap";
 import { ReservationDialog } from "@/components/ReservationDialog";
 import { ConfirmationToast } from "@/components/ConfirmationToast";
 import { RESERVABLE_SEATS } from "@/lib/tables";
-import { useReservations } from "@/lib/useReservations";
+import { useReservations, type Reservation } from "@/lib/useReservations";
 import type { TableDef } from "@/lib/tables";
 
 export const Route = createFileRoute("/")({
@@ -31,6 +31,7 @@ type Pending = { seatId: string; table: TableDef; seatNumber: number } | null;
 function Index() {
   const { reservations, loading, error } = useReservations();
   const [pending, setPending] = useState<Pending>(null);
+  const [viewing, setViewing] = useState<Reservation | null>(null);
   const [confirmation, setConfirmation] = useState<
     | { name: string; tableLabel: string; seatNumber: number }
     | null
@@ -38,6 +39,10 @@ function Index() {
 
   const reservedSet = useMemo(
     () => new Set(reservations.map((r) => r.seatId)),
+    [reservations],
+  );
+  const reservationsBySeat = useMemo(
+    () => new Map(reservations.map((r) => [r.seatId, r] as const)),
     [reservations],
   );
 
@@ -102,10 +107,12 @@ function Index() {
         <div className="mt-6">
           <SeatingMap
             reservedSeatIds={reservedSet}
+            reservationsBySeat={reservationsBySeat}
             selectedSeatId={pending?.seatId ?? null}
             onSelectSeat={(seatId, table, seatNumber) =>
               setPending({ seatId, table, seatNumber })
             }
+            onShowReserved={(r) => setViewing(r)}
           />
         </div>
 
@@ -116,9 +123,11 @@ function Index() {
         )}
 
         <p className="mt-6 text-center text-xs text-[color:var(--cream)]/40">
-          Tip: hover a seat to see its number. Tap any green seat to reserve.
+          Tip: hover any seat for details. Tap a green seat to reserve, or a red one to see who has it.
         </p>
       </div>
+
+      {viewing && <ReservedInfo reservation={viewing} onClose={() => setViewing(null)} />}
 
       {pending && (
         <ReservationDialog

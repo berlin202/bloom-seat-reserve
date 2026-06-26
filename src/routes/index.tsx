@@ -180,3 +180,49 @@ function Legend() {
     </div>
   );
 }
+
+function ReservedInfo({ reservation, onClose }: { reservation: Reservation; onClose: () => void }) {
+  const when = reservation.createdAt
+    ? new Date(reservation.createdAt.seconds * 1000).toLocaleString()
+    : "—";
+  return (
+    <div
+      className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-sm rounded-2xl border border-[color:var(--gold)]/40 bg-[color:var(--bg)] p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
+          Reserved seat
+        </p>
+        <h3 className="mt-2 font-display text-2xl text-[color:var(--cream)]">
+          Table {reservation.tableLabel} · Seat {reservation.seatNumber}
+        </h3>
+        <dl className="mt-4 space-y-2 text-sm">
+          <div className="flex justify-between gap-4">
+            <dt className="text-[color:var(--cream)]/60">Name</dt>
+            <dd className="text-[color:var(--cream)] text-right">{reservation.name}</dd>
+          </div>
+          {reservation.reservationNumber != null && (
+            <div className="flex justify-between gap-4">
+              <dt className="text-[color:var(--cream)]/60">Reservation #</dt>
+              <dd className="text-[color:var(--cream)] text-right">{reservation.reservationNumber}</dd>
+            </div>
+          )}
+          <div className="flex justify-between gap-4">
+            <dt className="text-[color:var(--cream)]/60">Reserved at</dt>
+            <dd className="text-[color:var(--cream)] text-right">{when}</dd>
+          </div>
+        </dl>
+        <button
+          onClick={onClose}
+          className="mt-6 w-full rounded-md border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-4 py-2 text-sm uppercase tracking-wider text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/20"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+}

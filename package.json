@@ -8,6 +8,8 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
+    "cf:preview": "bun run build && wrangler dev",
+    "cf:deploy": "bun run build && wrangler deploy",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

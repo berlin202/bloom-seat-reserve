@@ -177,9 +177,11 @@ function AdminTable() {
               <tr>
                 <Th>#</Th>
                 <Th>Name</Th>
+                <Th>Mobile</Th>
                 <Th>Table</Th>
                 <Th>Seat</Th>
                 <Th>Reserved at</Th>
+
               </tr>
             </thead>
             <tbody>
@@ -188,10 +190,11 @@ function AdminTable() {
               ))}
               {!loading && sorted.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
+                  <td colSpan={6} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
                     No reservations yet.
                   </td>
                 </tr>
+
               )}
             </tbody>
           </table>
@@ -218,6 +221,8 @@ function Row({
         {r.reservationNumber ?? "—"}
       </td>
       <td className="px-4 py-3">{r.name}</td>
+      <td className="px-4 py-3 text-[color:var(--cream)]/80">{r.mobile ?? "—"}</td>
+
       <td className="px-4 py-3">{r.tableLabel}</td>
       <td className="px-4 py-3">{r.seatNumber}</td>
       <td className="px-4 py-3 text-[color:var(--cream)]/80">{formatTime(r.createdAt)}</td>

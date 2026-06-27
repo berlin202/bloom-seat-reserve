@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { useReservations, type Reservation } from "@/lib/useReservations";
+
 
 export const Route = createFileRoute("/admin")({
   head: () => ({

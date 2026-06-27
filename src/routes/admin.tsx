@@ -195,7 +195,10 @@ function AdminTable({ user }: { user: User }) {
               {reservations.length} total{loading ? " · loading…" : ""}
             </p>
           </div>
-          <div className="flex shrink-0 gap-2">
+          <div className="flex shrink-0 flex-wrap items-center gap-2">
+            <span className="hidden sm:inline text-xs text-[color:var(--cream)]/60">
+              {user.email}
+            </span>
             <Link
               to="/"
               className="rounded-md border border-[color:var(--gold)]/30 px-3 py-2 text-sm hover:bg-white/5"
@@ -208,7 +211,14 @@ function AdminTable({ user }: { user: User }) {
             >
               Export CSV
             </button>
+            <button
+              onClick={() => signOut(auth)}
+              className="rounded-md border border-[color:var(--gold)]/30 px-3 py-2 text-sm hover:bg-white/5"
+            >
+              Sign out
+            </button>
           </div>
+
         </header>
 
         <div className="overflow-x-auto rounded-xl border border-[color:var(--gold)]/20 bg-black/30">

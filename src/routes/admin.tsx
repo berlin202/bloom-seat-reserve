@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { useReservations, type Reservation } from "@/lib/useReservations";
+
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -181,7 +184,7 @@ function AdminTable() {
                 <Th>Table</Th>
                 <Th>Seat</Th>
                 <Th>Reserved at</Th>
-
+                <Th>Actions</Th>
               </tr>
             </thead>
             <tbody>
@@ -190,11 +193,10 @@ function AdminTable() {
               ))}
               {!loading && sorted.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
+                  <td colSpan={7} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
                     No reservations yet.
                   </td>
                 </tr>
-
               )}
             </tbody>
           </table>
@@ -203,6 +205,7 @@ function AdminTable() {
     </div>
   );
 }
+
 
 function Th({ children }: { children: React.ReactNode }) {
   return <th className="px-4 py-3 font-medium">{children}</th>;
@@ -215,17 +218,116 @@ function Row({
   r: Reservation;
   formatTime: (ts?: { seconds: number; nanoseconds: number }) => string;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(r.name);
+  const [mobile, setMobile] = useState(r.mobile ?? "");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function save() {
+    setBusy(true);
+    setErr(null);
+    try {
+      await updateDoc(doc(db, "reservations", r.seatId), {
+        name: name.trim(),
+        mobile: mobile.trim(),
+      });
+      setEditing(false);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Failed to save");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function remove() {
+    if (!confirm(`Delete reservation for Table ${r.tableLabel} · Seat ${r.seatNumber}?`)) return;
+    setBusy(true);
+    setErr(null);
+    try {
+      await deleteDoc(doc(db, "reservations", r.seatId));
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Failed to delete");
+      setBusy(false);
+    }
+  }
+
   return (
-    <tr className="border-t border-white/5">
+    <tr className="border-t border-white/5 align-top">
       <td className="px-4 py-3 font-mono text-[color:var(--gold)]">
         {r.reservationNumber ?? "—"}
       </td>
-      <td className="px-4 py-3">{r.name}</td>
-      <td className="px-4 py-3 text-[color:var(--cream)]/80">{r.mobile ?? "—"}</td>
-
+      <td className="px-4 py-3">
+        {editing ? (
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full rounded border border-[color:var(--gold)]/30 bg-black/40 px-2 py-1 text-sm"
+          />
+        ) : (
+          r.name
+        )}
+      </td>
+      <td className="px-4 py-3 text-[color:var(--cream)]/80">
+        {editing ? (
+          <input
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+            className="w-full rounded border border-[color:var(--gold)]/30 bg-black/40 px-2 py-1 text-sm"
+          />
+        ) : (
+          r.mobile ?? "—"
+        )}
+      </td>
       <td className="px-4 py-3">{r.tableLabel}</td>
       <td className="px-4 py-3">{r.seatNumber}</td>
       <td className="px-4 py-3 text-[color:var(--cream)]/80">{formatTime(r.createdAt)}</td>
+      <td className="px-4 py-3">
+        <div className="flex flex-col gap-1">
+          <div className="flex gap-2">
+            {editing ? (
+              <>
+                <button
+                  onClick={save}
+                  disabled={busy}
+                  className="rounded bg-[color:var(--gold)] px-2 py-1 text-xs font-semibold text-black disabled:opacity-50"
+                >
+                  {busy ? "…" : "Save"}
+                </button>
+                <button
+                  onClick={() => {
+                    setEditing(false);
+                    setName(r.name);
+                    setMobile(r.mobile ?? "");
+                    setErr(null);
+                  }}
+                  className="rounded border border-[color:var(--gold)]/30 px-2 py-1 text-xs"
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setEditing(true)}
+                  className="rounded border border-[color:var(--gold)]/40 px-2 py-1 text-xs text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={remove}
+                  disabled={busy}
+                  className="rounded border border-red-500/40 px-2 py-1 text-xs text-red-300 hover:bg-red-950/40 disabled:opacity-50"
+                >
+                  Delete
+                </button>
+              </>
+            )}
+          </div>
+          {err && <p className="text-xs text-red-300">{err}</p>}
+        </div>
+      </td>
     </tr>
   );
 }
+

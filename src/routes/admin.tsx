@@ -1,9 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  type User,
+} from "firebase/auth";
+import { ADMIN_EMAILS, auth, db } from "@/lib/firebase";
 import { useReservations, type Reservation } from "@/lib/useReservations";
-
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -16,52 +21,72 @@ export const Route = createFileRoute("/admin")({
   component: Admin,
 });
 
-type Credential = { email?: string; password: string };
-
-// Accepted admin credentials. Legacy quick password is kept so existing
-// links still work; the new email-based credential was provided by the
-// event organiser.
-const ADMIN_CREDENTIALS: Credential[] = [
-  { password: "admin123" },
-  { email: "wccdinneradmin@gmail.com", password: "wccdinneradmin2026@#" },
-];
-
-function checkCredentials(email: string, password: string) {
-  const e = email.trim().toLowerCase();
-  return ADMIN_CREDENTIALS.some(
-    (c) => c.password === password && (!c.email || c.email.toLowerCase() === e),
-  );
+function isAdmin(user: User | null) {
+  const email = user?.email?.toLowerCase();
+  return !!email && ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(email);
 }
 
 function Admin() {
-  const [unlocked, setUnlocked] = useState(false);
+  const [user, setUser] = useState<User | null>(auth.currentUser);
+  const [ready, setReady] = useState(false);
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  if (!unlocked) {
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setReady(true);
+    });
+    return () => unsub();
+  }, []);
+
+  async function handleSignIn(e: React.FormEvent) {
+    e.preventDefault();
+    setErr(null);
+    setBusy(true);
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email.trim(), pwd);
+      if (!isAdmin(cred.user)) {
+        await signOut(auth);
+        setErr("This account is not an admin.");
+      }
+    } catch (e2) {
+      setErr(e2 instanceof Error ? e2.message : "Sign in failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (!ready) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-[color:var(--bg)] text-[color:var(--cream)]/60">
+        Loading…
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin(user)) {
     return (
       <div className="grid min-h-screen place-items-center bg-[color:var(--bg)] p-4 text-[color:var(--cream)]">
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (checkCredentials(email, pwd)) setUnlocked(true);
-            else setErr(true);
-          }}
+          onSubmit={handleSignIn}
           className="w-full max-w-sm rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--surface)] p-6 shadow-2xl"
         >
           <p className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">Admin</p>
           <h1 className="mt-1 font-display text-2xl">Sign in</h1>
           <label className="mt-4 block text-xs uppercase tracking-wider text-[color:var(--cream)]/60">
-            Email <span className="normal-case text-[color:var(--cream)]/40">(optional)</span>
+            Email
           </label>
           <input
             type="email"
+            required
             autoComplete="username"
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
-              setErr(false);
+              setErr(null);
             }}
             className="mt-1 w-full rounded-md border border-[color:var(--gold)]/30 bg-black/30 px-3 py-2 outline-none focus:border-[color:var(--gold)]"
           />
@@ -70,21 +95,32 @@ function Admin() {
           </label>
           <input
             type="password"
+            required
             autoComplete="current-password"
             value={pwd}
             onChange={(e) => {
               setPwd(e.target.value);
-              setErr(false);
+              setErr(null);
             }}
             className="mt-1 w-full rounded-md border border-[color:var(--gold)]/30 bg-black/30 px-3 py-2 outline-none focus:border-[color:var(--gold)]"
           />
-          {err && <p className="mt-2 text-sm text-red-300">Incorrect credentials.</p>}
+          {err && <p className="mt-2 text-sm text-red-300">{err}</p>}
           <button
             type="submit"
-            className="mt-4 w-full rounded-md bg-[color:var(--gold)] px-4 py-2 text-sm font-semibold text-black hover:brightness-110"
+            disabled={busy}
+            className="mt-4 w-full rounded-md bg-[color:var(--gold)] px-4 py-2 text-sm font-semibold text-black hover:brightness-110 disabled:opacity-60"
           >
-            Unlock
+            {busy ? "Signing in…" : "Sign in"}
           </button>
+          {user && !isAdmin(user) && (
+            <button
+              type="button"
+              onClick={() => signOut(auth)}
+              className="mt-2 w-full rounded-md border border-[color:var(--gold)]/30 px-4 py-2 text-xs text-[color:var(--cream)]/80"
+            >
+              Sign out {user.email}
+            </button>
+          )}
           <Link
             to="/"
             className="mt-4 block text-center text-xs text-[color:var(--cream)]/60 hover:text-[color:var(--gold)]"
@@ -96,8 +132,9 @@ function Admin() {
     );
   }
 
-  return <AdminTable />;
+  return <AdminTable user={user} />;
 }
+
 
 function AdminTable() {
   const { reservations, loading } = useReservations();

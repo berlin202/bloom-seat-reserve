@@ -136,7 +136,7 @@ function Admin() {
 }
 
 
-function AdminTable() {
+function AdminTable({ user }: { user: User }) {
   const { reservations, loading } = useReservations();
 
   const sorted = useMemo(

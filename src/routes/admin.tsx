@@ -184,7 +184,7 @@ function AdminTable() {
                 <Th>Table</Th>
                 <Th>Seat</Th>
                 <Th>Reserved at</Th>
-
+                <Th>Actions</Th>
               </tr>
             </thead>
             <tbody>
@@ -193,11 +193,10 @@ function AdminTable() {
               ))}
               {!loading && sorted.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
+                  <td colSpan={7} className="px-4 py-8 text-center text-[color:var(--cream)]/50">
                     No reservations yet.
                   </td>
                 </tr>
-
               )}
             </tbody>
           </table>
@@ -206,6 +205,7 @@ function AdminTable() {
     </div>
   );
 }
+
 
 function Th({ children }: { children: React.ReactNode }) {
   return <th className="px-4 py-3 font-medium">{children}</th>;

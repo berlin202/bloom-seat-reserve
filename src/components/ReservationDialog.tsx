@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { doc, runTransaction, serverTimestamp, collection, getCountFromServer } from "firebase/firestore";
+import { doc, runTransaction, serverTimestamp, collection, getCountFromServer, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { TableDef } from "@/lib/tables";
 
@@ -35,6 +35,10 @@ export function ReservationDialog({ seatId, table, seatNumber, onClose, onConfir
 
     setSubmitting(true);
     try {
+      const lockSnap = await getDoc(doc(db, "settings", "reservations"));
+      if (lockSnap.exists() && lockSnap.data()?.locked) {
+        throw new Error("Reservations are currently closed.");
+      }
       const ref = doc(db, "reservations", seatId);
       const countSnap = await getCountFromServer(collection(db, "reservations"));
       const nextNumber = (countSnap.data().count ?? 0) + 1;

@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { ADMIN_EMAILS, auth, db } from "@/lib/firebase";
 import { useReservations, type Reservation } from "@/lib/useReservations";
+import { useReservationsLock, setReservationsLocked } from "@/lib/useReservationsLock";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -138,6 +139,20 @@ function Admin() {
 
 function AdminTable({ user }: { user: User }) {
   const { reservations, loading } = useReservations();
+  const { locked } = useReservationsLock();
+  const [lockBusy, setLockBusy] = useState(false);
+
+  async function toggleLock() {
+    setLockBusy(true);
+    try {
+      await setReservationsLocked(!locked);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Failed to update lock");
+    } finally {
+      setLockBusy(false);
+    }
+  }
+
 
   const sorted = useMemo(
     () =>
@@ -205,6 +220,18 @@ function AdminTable({ user }: { user: User }) {
             >
               ← Map
             </Link>
+            <button
+              onClick={toggleLock}
+              disabled={lockBusy}
+              className={
+                locked
+                  ? "rounded-md border border-green-500/50 bg-green-950/30 px-3 py-2 text-sm text-green-200 hover:bg-green-900/40 disabled:opacity-50"
+                  : "rounded-md border border-red-500/50 bg-red-950/30 px-3 py-2 text-sm text-red-200 hover:bg-red-900/40 disabled:opacity-50"
+              }
+              title={locked ? "Reservations are closed — click to reopen" : "Reservations are open — click to close"}
+            >
+              {lockBusy ? "…" : locked ? "Reopen reservations" : "Close reservations"}
+            </button>
             <button
               onClick={exportCsv}
               className="rounded-md bg-[color:var(--gold)] px-3 py-2 text-sm font-semibold text-black hover:brightness-110"

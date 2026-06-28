@@ -31,6 +31,7 @@ type Pending = { seatId: string; table: TableDef; seatNumber: number } | null;
 
 function Index() {
   const { reservations, loading, error } = useReservations();
+  const { locked } = useReservationsLock();
   const [pending, setPending] = useState<Pending>(null);
   const [viewing, setViewing] = useState<Reservation | null>(null);
   const [confirmation, setConfirmation] = useState<

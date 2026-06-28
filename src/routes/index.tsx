@@ -5,6 +5,7 @@ import { ReservationDialog } from "@/components/ReservationDialog";
 import { ConfirmationToast } from "@/components/ConfirmationToast";
 import { RESERVABLE_SEATS } from "@/lib/tables";
 import { useReservations, type Reservation } from "@/lib/useReservations";
+import { useReservationsLock } from "@/lib/useReservationsLock";
 import type { TableDef } from "@/lib/tables";
 
 export const Route = createFileRoute("/")({

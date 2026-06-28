@@ -139,6 +139,20 @@ function Admin() {
 
 function AdminTable({ user }: { user: User }) {
   const { reservations, loading } = useReservations();
+  const { locked } = useReservationsLock();
+  const [lockBusy, setLockBusy] = useState(false);
+
+  async function toggleLock() {
+    setLockBusy(true);
+    try {
+      await setReservationsLocked(!locked);
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "Failed to update lock");
+    } finally {
+      setLockBusy(false);
+    }
+  }
+
 
   const sorted = useMemo(
     () =>

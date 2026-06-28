@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { ADMIN_EMAILS, auth, db } from "@/lib/firebase";
 import { useReservations, type Reservation } from "@/lib/useReservations";
+import { useReservationsLock, setReservationsLocked } from "@/lib/useReservationsLock";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({

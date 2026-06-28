@@ -100,6 +100,12 @@ function Index() {
 
         <Legend />
 
+        {locked && (
+          <p className="mt-4 rounded-md border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-3 py-2 text-center text-sm text-[color:var(--gold)]">
+            Reservations are currently closed. Please contact the organizers for assistance.
+          </p>
+        )}
+
         {error && (
           <p className="mt-4 rounded-md border border-red-500/40 bg-red-950/40 px-3 py-2 text-sm text-red-200">
             Live updates unavailable: {error}
@@ -111,9 +117,10 @@ function Index() {
             reservedSeatIds={reservedSet}
             reservationsBySeat={reservationsBySeat}
             selectedSeatId={pending?.seatId ?? null}
-            onSelectSeat={(seatId, table, seatNumber) =>
-              setPending({ seatId, table, seatNumber })
-            }
+            onSelectSeat={(seatId, table, seatNumber) => {
+              if (locked) return;
+              setPending({ seatId, table, seatNumber });
+            }}
             onShowReserved={(r) => setViewing(r)}
           />
         </div>
